@@ -37,11 +37,27 @@ contract CropGame{
   //Maps User to the list of current planted plots they own
   mapping(address => PlantedPlot[]) plantedPlots; 
 
-  //struct Seed {}
-  //struct Crop {}
-  //struct Food {}
-
-
+    struct Seed {
+      string name;
+      uint256 seedTokenId;
+      uint256 readyTime; 
+      uint cooldownTime=7 minutes; //cooldownTime for seedTokenId
+      
+  }
+  
+  struct Crop {
+      string name;
+      uint256 cropTokenId;
+      uint256 seedTokenId;
+      uint256 readyTime;
+      uint cooldownTime=45 minutes; //cooldownTime for cropTokenId
+  }
+  struct Food {
+      string name;
+      uint256 foodTokenId;
+      uint256 cropTokenId;
+      
+  }
 
   modifier onlyOwner() {
     require(msg.sender == owner, "Only the owner may call this function");
