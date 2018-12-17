@@ -37,12 +37,11 @@ contract CropGame{
   //Maps User to the list of current planted plots they own
   mapping(address => PlantedPlot[]) plantedPlots; 
 
-    struct Seed {
+  struct Seed {
       string name;
       uint256 seedTokenId;
       uint256 readyTime; 
-      uint cooldownTime=7 minutes; //cooldownTime for seedTokenId
-      
+      uint cooldownTime; //cooldownTime for seedTokenId
   }
   
   struct Crop {
@@ -50,7 +49,7 @@ contract CropGame{
       uint256 cropTokenId;
       uint256 seedTokenId;
       uint256 readyTime;
-      uint cooldownTime=45 minutes; //cooldownTime for cropTokenId
+      uint cooldownTime; //cooldownTime for cropTokenId
   }
   struct Food {
       string name;
@@ -82,8 +81,10 @@ contract CropGame{
     plotTokenIds[newId] = plot;
   }
 
-  // TODO:  Add new card minting for other card types
-
+  function mint(address to, uint256 tokenId) public onlyMinter returns (bool) {
+        _mint(to, tokenId);
+        return true;
+  }
   /**
   @dev Anyone can plant a seed on a plot. This will check to make sure they have a plot and seed of the given type available and consume them
   @param plotId
@@ -92,9 +93,16 @@ contract CropGame{
   function plantSeed(uint256 _plotId, uint256 _seedId) public {
     market.consumeToken(msg.sender, _plotId, 1); //will autocheck that the user has 
     market.consumeToken(msg.sender, _seedId, 1); 
+  }
     
     //TODO: Create new PlotedLand object with harvest time based on Seed
-  }
+    function createPlotedLand(uint256 _plotId) public {
+        harvestTime=45 minutes;
+    }
+  
 
   //TODO: Function HARVEST 
+  function harvest(uint256 _cropTokenId, uint256 _plotTokenId) public {
+      market.consumeToken(msg.sender, _cropTokenId, 1);
+  }
 }
